@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Management Resources | Strand</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue: #1c374b; --red: #db0032; --warm: #dad2ca; --charcoal: #414141;
+  --muted: #7a7069; --border: #e2dbd4; --off-white: #f8f6f3; --light-warm: #f0ece8;
+}
+body {
+  font-family: 'Jost', sans-serif;
+  font-weight: 400;
+  color: var(--charcoal);
+  background: var(--off-white);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  background: var(--blue);
+  padding: 22px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.02em;
+}
+.header-sub {
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-top: 2px;
+}
+.hero {
+  background: var(--blue);
+  padding: 40px 40px 48px;
+  color: white;
+}
+.hero-badge {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.8);
+  padding: 4px 12px;
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
+}
+.hero p {
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.7);
+  max-width: 520px;
+  line-height: 1.65;
+}
+.main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 40px 60px;
+  flex: 1;
+  width: 100%;
+}
+.step-intro {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 32px;
+  max-width: 560px;
+}
+.step-intro strong { font-weight: 500; color: var(--charcoal); }
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 28px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.card:hover {
+  border-color: var(--blue);
+  box-shadow: 0 2px 12px rgba(28,55,75,0.08);
+}
+.card-step {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 10px;
+}
+.card-icon {
+  font-size: 28px;
+  margin-bottom: 14px;
+  display: block;
+}
+.card h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--blue);
+  letter-spacing: 0.01em;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.card p {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.65;
+  flex: 1;
+  margin-bottom: 20px;
+}
+.card-cta {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 2px;
+  transition: border-color 0.15s;
+}
+.card:hover .card-cta { border-color: var(--blue); }
+.tip-box {
+  background: var(--light-warm);
+  border-left: 3px solid var(--red);
+  border-radius: 0 4px 4px 0;
+  padding: 14px 18px;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--charcoal);
+  line-height: 1.7;
+}
+.tip-box strong { font-weight: 500; color: var(--blue); }
+.footer {
+  background: var(--blue);
+  padding: 18px 40px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="header-title">Time Management &amp; Prioritisation</div>
+    <div class="header-sub">Post-module resources &mdash; Learning &amp; Development</div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">Post-module activity</div>
+  <h1>Your next steps</h1>
+  <p>You've completed the Time Management &amp; Prioritisation module. Use these two resources over the coming week to put what you've learnt into practice.</p>
+</div>
+
+<div class="main">
+
+  <p class="step-intro">Start with the <strong>how-to guide</strong> to understand how the tracker works, then use the <strong>weekly tracker</strong> to log your tasks across the week. At the end of the week, review your patterns and bring your reflections to your next catch-up with your manager.</p>
+
+  <div class="cards" style="grid-template-columns: 1fr 1fr 1fr;">
+    <a class="card" href="module-preview.html">
+      <div class="card-step">Revisit — Module</div>
+      <span class="card-icon">&#9651;</span>
+      <h2>Time management module</h2>
+      <p>Return to the full learning module to revisit any section or refresh your knowledge at any time.</p>
+      <span class="card-cta">Open module &rarr;</span>
+    </a>
+    <a class="card" href="guide.html">
+      <div class="card-step">Start here — Step 1</div>
+      <span class="card-icon">&#9654;</span>
+      <h2>How to use the tracker</h2>
+      <p>A one-page guide covering how to get started, what the priority quadrants mean, and tips for getting the most out of your week.</p>
+      <span class="card-cta">Read the guide &rarr;</span>
+    </a>
+    <a class="card" href="tracker.html">
+      <div class="card-step">Then use — Step 2</div>
+      <span class="card-icon">&#9679;</span>
+      <h2>Weekly time tracker</h2>
+      <p>Log your tasks day by day, assign each one to a priority quadrant, and track how your time is distributed across the week.</p>
+      <span class="card-cta">Open the tracker &rarr;</span>
+    </a>
+  </div>
+
+  <div class="tip-box">
+    <strong>A note on your data:</strong> everything you log in the tracker is saved privately on your own device — no one else can see it unless you choose to share it. Use the Print / Save PDF button in the tracker to export your week and share with your manager if you'd like to discuss your results.
+  </div>
+
+</div>
+
+<div class="footer">Strand &nbsp;&mdash;&nbsp; Going Places Since 1927 &nbsp;&mdash;&nbsp; Learning &amp; Development</div>
+
+</body>
+</html>

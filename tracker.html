@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Time Tracker | Strand</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue: #1c374b; --red: #db0032; --warm: #dad2ca; --charcoal: #414141;
+  --muted: #7a7069; --border: #e2dbd4; --off-white: #f8f6f3; --light-warm: #f0ece8;
+  --q1-bg: #fde8ee; --q1-text: #5c1020; --q1-accent: #db0032;
+  --q2-bg: #dde8ef; --q2-text: #0f2230; --q2-accent: #1c374b;
+  --q3-bg: #f5efe8; --q3-text: #4a3520; --q3-accent: #8a6840;
+  --q4-bg: #eceae7; --q4-text: #4a4845; --q4-accent: #7a7069;
+}
+body { font-family: 'Jost', sans-serif; font-weight: 400; font-size: 14px; color: var(--charcoal); background: var(--off-white); min-height: 100vh; }
+
+/* HEADER */
+.header { background: var(--blue); padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; }
+.header-left { display: flex; align-items: center; gap: 20px; }
+.header-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: white; letter-spacing: 0.02em; }
+.header-sub { font-size: 11px; font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+.header-actions { display: flex; gap: 10px; }
+.btn-ghost { font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; padding: 7px 16px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: rgba(255,255,255,0.75); cursor: pointer; transition: all 0.15s; }
+.btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); }
+.btn-red { background: var(--red); color: white; border-color: var(--red); font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; padding: 7px 16px; border-radius: 2px; border: 1px solid var(--red); cursor: pointer; transition: all 0.15s; }
+.btn-red:hover { background: #b5002a; }
+
+/* INTRO BANNER */
+.intro-banner { background: var(--light-warm); border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.intro-banner p { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.6; max-width: 700px; }
+.intro-banner strong { font-weight: 500; color: var(--charcoal); }
+
+/* WEEK NAV */
+.week-nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; background: white; border-bottom: 1px solid var(--border); }
+.week-label { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--blue); letter-spacing: 0.01em; }
+.week-btns { display: flex; gap: 6px; }
+.week-btn { font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 400; letter-spacing: 0.06em; padding: 6px 14px; border-radius: 2px; border: 1px solid var(--border); background: white; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+.week-btn:hover { background: var(--light-warm); }
+
+/* SUMMARY CARDS */
+.summary-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px 32px; }
+.q-card { border-radius: 4px; padding: 16px 18px; position: relative; overflow: hidden; }
+.q-card.q1 { background: var(--q1-bg); }
+.q-card.q2 { background: var(--q2-bg); }
+.q-card.q3 { background: var(--q3-bg); }
+.q-card.q4 { background: var(--q4-bg); }
+.q-card-label { font-size: 9px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; }
+.q1 .q-card-label { color: var(--q1-accent); }
+.q2 .q-card-label { color: var(--q2-accent); }
+.q3 .q-card-label { color: var(--q3-accent); }
+.q4 .q-card-label { color: var(--q4-accent); }
+.q-card-name { font-family: 'Cormorant Garamond', serif; font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+.q1 .q-card-name { color: var(--q1-text); }
+.q2 .q-card-name { color: var(--q2-text); }
+.q3 .q-card-name { color: var(--q3-text); }
+.q4 .q-card-name { color: var(--q4-text); }
+.q-hours { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; line-height: 1; }
+.q1 .q-hours { color: var(--q1-accent); }
+.q2 .q-hours { color: var(--q2-accent); }
+.q3 .q-hours { color: var(--q3-accent); }
+.q4 .q-hours { color: var(--q4-accent); }
+.q-hrs-label { font-size: 11px; font-weight: 300; margin-left: 4px; }
+.q-pct { font-size: 12px; font-weight: 300; margin-top: 6px; }
+.q1 .q-pct { color: var(--q1-text); }
+.q2 .q-pct { color: var(--q2-text); }
+.q3 .q-pct { color: var(--q3-text); }
+.q4 .q-pct { color: var(--q4-text); }
+.q-bar-bg { height: 3px; border-radius: 2px; margin-top: 10px; background: rgba(0,0,0,0.08); }
+.q-bar-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+.q1 .q-bar-fill { background: var(--q1-accent); }
+.q2 .q-bar-fill { background: var(--q2-accent); }
+.q3 .q-bar-fill { background: var(--q3-accent); }
+.q4 .q-bar-fill { background: var(--q4-accent); }
+
+/* MAIN LAYOUT */
+.main { display: grid; grid-template-columns: 1fr 340px; gap: 0; padding: 0 32px 40px; min-height: 400px; }
+
+/* DAY TABS + LOG */
+.log-panel { padding-right: 24px; }
+.day-tabs { display: flex; gap: 4px; margin: 20px 0 16px; }
+.day-tab { font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 400; letter-spacing: 0.06em; padding: 8px 18px; border-radius: 2px; border: 1px solid var(--border); background: white; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+.day-tab:hover { background: var(--light-warm); }
+.day-tab.active { background: var(--blue); color: white; border-color: var(--blue); }
+.day-tab.has-data { border-color: var(--warm); color: var(--charcoal); font-weight: 500; }
+.day-tab.active.has-data { background: var(--blue); color: white; border-color: var(--blue); }
+
+/* TASK TABLE */
+.task-table-wrap { background: white; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.task-table-header { display: grid; grid-template-columns: 1fr 80px 110px 36px; padding: 10px 16px; background: var(--off-white); border-bottom: 1px solid var(--border); font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.task-list { min-height: 60px; }
+.task-row { display: grid; grid-template-columns: 1fr 80px 110px 36px; padding: 12px 16px; border-bottom: 1px solid var(--border); align-items: center; transition: background 0.1s; }
+.task-row:last-child { border-bottom: none; }
+.task-row:hover { background: var(--off-white); }
+.task-name { font-size: 13px; font-weight: 300; color: var(--charcoal); line-height: 1.4; }
+.task-time { font-size: 13px; font-weight: 400; color: var(--charcoal); }
+.task-q-badge { display: inline-flex; align-items: center; font-size: 10px; font-weight: 500; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 2px; }
+.badge-q1 { background: var(--q1-bg); color: var(--q1-accent); }
+.badge-q2 { background: var(--q2-bg); color: var(--q2-accent); }
+.badge-q3 { background: var(--q3-bg); color: var(--q3-accent); }
+.badge-q4 { background: var(--q4-bg); color: var(--q4-accent); }
+.task-delete { background: none; border: none; color: var(--border); font-size: 16px; cursor: pointer; padding: 2px 4px; border-radius: 2px; transition: color 0.15s; line-height: 1; }
+.task-delete:hover { color: var(--red); }
+.empty-state { padding: 32px 16px; text-align: center; font-size: 13px; font-weight: 300; color: var(--muted); font-style: italic; }
+
+/* ADD TASK FORM */
+.add-form { background: white; border: 1px solid var(--border); border-radius: 4px; padding: 18px; margin-top: 12px; }
+.add-form-title { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+.form-row { display: grid; grid-template-columns: 1fr 90px; gap: 8px; margin-bottom: 10px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.form-group label { display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 8px 10px; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 300;
+  color: var(--charcoal); background: var(--off-white); border: 1px solid var(--border);
+  border-radius: 3px; outline: none; transition: border-color 0.15s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--blue); background: white; }
+.form-group textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
+.btn-add { width: 100%; padding: 10px; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; background: var(--blue); color: white; border: none; border-radius: 3px; cursor: pointer; transition: background 0.15s; }
+.btn-add:hover { background: #142a3a; }
+
+/* SIDEBAR */
+.sidebar { padding-top: 20px; padding-left: 24px; border-left: 1px solid var(--border); }
+.sidebar-section { margin-bottom: 24px; }
+.sidebar-title { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 600; color: var(--blue); margin-bottom: 12px; letter-spacing: 0.01em; }
+
+/* CHART */
+.chart-wrap { background: white; border: 1px solid var(--border); border-radius: 4px; padding: 16px; }
+.chart-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.chart-bar-row:last-child { margin-bottom: 0; }
+.chart-bar-label { font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; width: 28px; flex-shrink: 0; }
+.q1-label { color: var(--q1-accent); }
+.q2-label { color: var(--q2-accent); }
+.q3-label { color: var(--q3-accent); }
+.q4-label { color: var(--q4-accent); }
+.chart-bar-track { flex: 1; height: 8px; background: var(--off-white); border-radius: 4px; overflow: hidden; }
+.chart-bar-inner { height: 100%; border-radius: 4px; transition: width 0.4s ease; min-width: 0; }
+.q1-fill { background: var(--q1-accent); }
+.q2-fill { background: var(--q2-accent); }
+.q3-fill { background: var(--q3-accent); }
+.q4-fill { background: var(--q4-accent); }
+.chart-bar-val { font-size: 11px; font-weight: 400; color: var(--muted); width: 36px; text-align: right; flex-shrink: 0; }
+
+/* REFLECTION */
+.reflection-card { background: white; border: 1px solid var(--border); border-radius: 4px; padding: 16px; }
+.reflection-prompt { font-size: 12px; font-weight: 300; color: var(--muted); line-height: 1.6; margin-bottom: 10px; font-style: italic; }
+.reflection-card textarea { width: 100%; padding: 8px 10px; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 300; color: var(--charcoal); background: var(--off-white); border: 1px solid var(--border); border-radius: 3px; outline: none; resize: vertical; min-height: 80px; line-height: 1.55; transition: border-color 0.15s; }
+.reflection-card textarea:focus { border-color: var(--blue); background: white; }
+.btn-save-reflection { margin-top: 8px; width: 100%; padding: 8px; font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; background: transparent; color: var(--blue); border: 1px solid var(--blue); border-radius: 3px; cursor: pointer; transition: all 0.15s; }
+.btn-save-reflection:hover { background: var(--blue); color: white; }
+.saved-note { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 6px; display: none; }
+
+/* Q GUIDE */
+.q-guide { background: white; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.q-guide-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.q-guide-row:last-child { border-bottom: none; }
+.q-guide-badge { flex-shrink: 0; font-size: 9px; font-weight: 500; letter-spacing: 0.08em; padding: 3px 7px; border-radius: 2px; margin-top: 1px; }
+.q-guide-text { font-size: 12px; font-weight: 300; color: var(--muted); line-height: 1.5; }
+.q-guide-text strong { font-weight: 500; color: var(--charcoal); display: block; margin-bottom: 1px; }
+
+/* PRINT */
+@media print {
+  .header-actions, .add-form, .btn-save-reflection, .task-delete, .week-btns, .day-tabs { display: none !important; }
+  body { background: white; }
+  .main { grid-template-columns: 1fr 280px; }
+  .summary-row { padding: 12px 0; }
+  .intro-banner { display: none; }
+}
+
+/* FOOTER */
+.footer { background: var(--blue); padding: 16px 32px; text-align: center; font-size: 10px; font-weight: 300; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-top: 20px; }
+
+/* RESET MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: center; justify-content: center; }
+.modal-overlay.show { display: flex; }
+.modal { background: white; border-radius: 4px; padding: 28px; max-width: 360px; width: 90%; }
+.modal h3 { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--blue); margin-bottom: 10px; }
+.modal p { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+.modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
+.btn-cancel { font-family: 'Jost', sans-serif; font-size: 12px; padding: 8px 18px; border-radius: 2px; border: 1px solid var(--border); background: white; color: var(--charcoal); cursor: pointer; }
+.btn-confirm-reset { font-family: 'Jost', sans-serif; font-size: 12px; padding: 8px 18px; border-radius: 2px; border: 1px solid var(--red); background: var(--red); color: white; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div>
+      <div class="header-title">Weekly Time Tracker</div>
+      <div class="header-sub">Post-module activity &mdash; Learning &amp; Development</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn-ghost" onclick="window.print()">&#9112; Print / Save PDF</button>
+    <button class="btn-ghost" onclick="showResetModal()">New week</button>
+  </div>
+</div>
+
+<div class="intro-banner">
+  <p>Use this tracker for <strong>one full working week</strong> after completing the Time Management module. Log each task as you go, assign it to a priority quadrant, and review your patterns at the end of each day. The goal is honest self-awareness — understanding where you're spending your time will allow you to make more intentional choices about how you work.</p>
+</div>
+
+<div class="week-nav">
+  <div class="week-label" id="weekLabel">Week of —</div>
+  <div class="week-btns">
+    <button class="week-btn" onclick="changeWeek(-1)">&#8592; Previous</button>
+    <button class="week-btn" onclick="changeWeek(1)">Next &#8594;</button>
+  </div>
+</div>
+
+<div class="summary-row">
+  <div class="q-card q1">
+    <div class="q-card-label">Quadrant 1</div>
+    <div class="q-card-name">Urgent &amp; Important</div>
+    <div><span class="q-hours" id="q1-hours">0.0</span><span class="q-hrs-label">hrs</span></div>
+    <div class="q-pct" id="q1-pct">0% of logged time</div>
+    <div class="q-bar-bg"><div class="q-bar-fill" id="q1-bar" style="width:0%"></div></div>
+  </div>
+  <div class="q-card q2">
+    <div class="q-card-label">Quadrant 2</div>
+    <div class="q-card-name">Important, Not Urgent</div>
+    <div><span class="q-hours" id="q2-hours">0.0</span><span class="q-hrs-label">hrs</span></div>
+    <div class="q-pct" id="q2-pct">0% of logged time</div>
+    <div class="q-bar-bg"><div class="q-bar-fill" id="q2-bar" style="width:0%"></div></div>
+  </div>
+  <div class="q-card q3">
+    <div class="q-card-label">Quadrant 3</div>
+    <div class="q-card-name">Urgent, Not Important</div>
+    <div><span class="q-hours" id="q3-hours">0.0</span><span class="q-hrs-label">hrs</span></div>
+    <div class="q-pct" id="q3-pct">0% of logged time</div>
+    <div class="q-bar-bg"><div class="q-bar-fill" id="q3-bar" style="width:0%"></div></div>
+  </div>
+  <div class="q-card q4">
+    <div class="q-card-label">Quadrant 4</div>
+    <div class="q-card-name">Neither</div>
+    <div><span class="q-hours" id="q4-hours">0.0</span><span class="q-hrs-label">hrs</span></div>
+    <div class="q-pct" id="q4-pct">0% of logged time</div>
+    <div class="q-bar-bg"><div class="q-bar-fill" id="q4-bar" style="width:0%"></div></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="log-panel">
+    <div class="day-tabs" id="dayTabs"></div>
+
+    <div class="task-table-wrap">
+      <div class="task-table-header">
+        <span>Task</span>
+        <span>Time</span>
+        <span>Quadrant</span>
+        <span></span>
+      </div>
+      <div class="task-list" id="taskList">
+        <div class="empty-state">No tasks logged for this day yet.</div>
+      </div>
+    </div>
+
+    <div class="add-form">
+      <div class="add-form-title">Log a task</div>
+      <div class="form-group" style="margin-bottom:10px;">
+        <label>Task description</label>
+        <input type="text" id="taskName" placeholder="e.g. Prepared monthly report" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Time spent</label>
+          <input type="number" id="taskTime" placeholder="e.g. 1.5" min="0.1" max="12" step="0.25" />
+        </div>
+        <div class="form-group">
+          <label>Unit</label>
+          <select id="taskUnit">
+            <option value="hours">Hours</option>
+            <option value="mins">Minutes</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px;">
+        <label>Priority quadrant</label>
+        <select id="taskQ">
+          <option value="">— Select quadrant —</option>
+          <option value="Q1">Quadrant 1 — Urgent &amp; Important (do now)</option>
+          <option value="Q2">Quadrant 2 — Important, not urgent (schedule)</option>
+          <option value="Q3">Quadrant 3 — Urgent, not important (delegate/delay)</option>
+          <option value="Q4">Quadrant 4 — Neither (eliminate)</option>
+        </select>
+      </div>
+      <button class="btn-add" onclick="addTask()">+ Add task</button>
+      <div id="formError" style="display:none; margin-top:8px; font-size:12px; color:var(--red); font-weight:300;"></div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">This week at a glance</div>
+      <div class="chart-wrap">
+        <div class="chart-bar-row">
+          <div class="chart-bar-label q1-label">Quadrant 1</div>
+          <div class="chart-bar-track"><div class="chart-bar-inner q1-fill" id="chart-q1" style="width:0%"></div></div>
+          <div class="chart-bar-val" id="chart-q1-val">0h</div>
+        </div>
+        <div class="chart-bar-row">
+          <div class="chart-bar-label q2-label">Quadrant 2</div>
+          <div class="chart-bar-track"><div class="chart-bar-inner q2-fill" id="chart-q2" style="width:0%"></div></div>
+          <div class="chart-bar-val" id="chart-q2-val">0h</div>
+        </div>
+        <div class="chart-bar-row">
+          <div class="chart-bar-label q3-label">Quadrant 3</div>
+          <div class="chart-bar-track"><div class="chart-bar-inner q3-fill" id="chart-q3" style="width:0%"></div></div>
+          <div class="chart-bar-val" id="chart-q3-val">0h</div>
+        </div>
+        <div class="chart-bar-row">
+          <div class="chart-bar-label q4-label">Quadrant 4</div>
+          <div class="chart-bar-track"><div class="chart-bar-inner q4-fill" id="chart-q4" style="width:0%"></div></div>
+          <div class="chart-bar-val" id="chart-q4-val">0h</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">End of day reflection</div>
+      <div class="reflection-card">
+        <div class="reflection-prompt" id="reflectionPrompt">Complete your task log first, then reflect on your day.</div>
+        <textarea id="reflectionText" placeholder="Write your reflection here..."></textarea>
+        <button class="btn-save-reflection" onclick="saveReflection()">Save reflection</button>
+        <div class="saved-note" id="savedNote">&#10003; Saved</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">Quick reference</div>
+      <div class="q-guide">
+        <div class="q-guide-row">
+          <span class="q-guide-badge badge-q1">Quadrant 1</span>
+          <div class="q-guide-text"><strong>Do now</strong>Urgent and important. Needs your attention today.</div>
+        </div>
+        <div class="q-guide-row">
+          <span class="q-guide-badge badge-q2">Quadrant 2</span>
+          <div class="q-guide-text"><strong>Schedule it</strong>Important but not urgent. Protect time for this.</div>
+        </div>
+        <div class="q-guide-row">
+          <span class="q-guide-badge badge-q3">Quadrant 3</span>
+          <div class="q-guide-text"><strong>Delegate or delay</strong>Urgent but not important to you specifically.</div>
+        </div>
+        <div class="q-guide-row">
+          <span class="q-guide-badge badge-q4">Quadrant 4</span>
+          <div class="q-guide-text"><strong>Eliminate</strong>Neither urgent nor important. Stop doing this.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">Strand &nbsp;&mdash;&nbsp; Going Places Since 1927 &nbsp;&mdash;&nbsp; Learning &amp; Development</div>
+
+<div class="modal-overlay" id="resetModal">
+  <div class="modal">
+    <h3>Start a new week?</h3>
+    <p>This will clear all tasks and reflections for the current week. Make sure you've saved or printed a copy first.</p>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="hideResetModal()">Cancel</button>
+      <button class="btn-confirm-reset" onclick="resetWeek()">Yes, start new week</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+var DAY_SHORT = ['Mon','Tue','Wed','Thu','Fri'];
+var currentDay = 0;
+var currentWeekOffset = 0;
+
+var reflectionPrompts = [
+  'How balanced was your day across the quadrants? Were you mostly reactive (Quadrant 1/Quadrant 3) or proactive (Quadrant 2)?',
+  'What took longer than expected today — and why? Was there a trap at play?',
+  'What one thing could you do differently tomorrow to protect more Quadrant 2 time?',
+  'Did you ask for clarity before starting tasks today, or did you have to redo anything?',
+  'How did you handle interruptions and unexpected requests today?'
+];
+
+function getWeekKey() { return 'week_' + currentWeekOffset; }
+function getDayKey(d) { return getWeekKey() + '_day_' + d; }
+function getReflectionKey(d) { return getWeekKey() + '_ref_' + d; }
+
+function getWeekMonday(offset) {
+  var now = new Date();
+  var day = now.getDay();
+  var diff = now.getDate() - day + (day === 0 ? -6 : 1);
+  var monday = new Date(now.setDate(diff + offset * 7));
+  return monday;
+}
+
+function formatDate(d) {
+  return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function getTasks(d) {
+  try { return JSON.parse(localStorage.getItem(getDayKey(d))) || []; } catch(e) { return []; }
+}
+
+function saveTasks(d, tasks) {
+  localStorage.setItem(getDayKey(d), JSON.stringify(tasks));
+}
+
+function getReflection(d) {
+  return localStorage.getItem(getReflectionKey(d)) || '';
+}
+
+function saveReflectionData(d, text) {
+  localStorage.setItem(getReflectionKey(d), text);
+}
+
+function init() {
+  var monday = getWeekMonday(currentWeekOffset);
+  var friday = new Date(monday); friday.setDate(friday.getDate() + 4);
+  document.getElementById('weekLabel').textContent = 'Week of ' + formatDate(monday);
+
+  var today = new Date();
+  var todayDay = today.getDay();
+  if (todayDay >= 1 && todayDay <= 5 && currentWeekOffset === 0) {
+    currentDay = todayDay - 1;
+  }
+
+  renderTabs();
+  renderDay(currentDay);
+  updateSummary();
+}
+
+function renderTabs() {
+  var tabs = document.getElementById('dayTabs');
+  tabs.innerHTML = '';
+  DAYS.forEach(function(d, i) {
+    var tasks = getTasks(i);
+    var btn = document.createElement('button');
+    btn.className = 'day-tab' + (i === currentDay ? ' active' : '') + (tasks.length > 0 ? ' has-data' : '');
+    btn.textContent = DAY_SHORT[i] + (tasks.length > 0 ? ' (' + tasks.length + ')' : '');
+    btn.onclick = (function(idx) { return function() { currentDay = idx; renderTabs(); renderDay(idx); }; })(i);
+    tabs.appendChild(btn);
+  });
+}
+
+function renderDay(d) {
+  var tasks = getTasks(d);
+  var list = document.getElementById('taskList');
+  list.innerHTML = '';
+
+  if (tasks.length === 0) {
+    list.innerHTML = '<div class="empty-state">No tasks logged for ' + DAYS[d] + ' yet.</div>';
+  } else {
+    tasks.forEach(function(t, i) {
+      var row = document.createElement('div');
+      row.className = 'task-row';
+      var timeStr = t.hours >= 1 ? t.hours.toFixed(1) + 'h' : Math.round(t.hours * 60) + 'm';
+      var qClass = t.q.toLowerCase().replace(' ','');
+      row.innerHTML = '<div class="task-name">' + escHtml(t.name) + '</div>' +
+        '<div class="task-time">' + timeStr + '</div>' +
+        '<div><span class="task-q-badge badge-' + t.q.toLowerCase() + '">' + t.q + '</span></div>' +
+        '<button class="task-delete" onclick="deleteTask(' + d + ',' + i + ')" title="Remove">&#215;</button>';
+      list.appendChild(row);
+    });
+  }
+
+  var ref = getReflection(d);
+  var refText = document.getElementById('reflectionText');
+  refText.value = ref;
+  document.getElementById('savedNote').style.display = 'none';
+
+  var promptIdx = d % reflectionPrompts.length;
+  document.getElementById('reflectionPrompt').textContent = reflectionPrompts[promptIdx];
+}
+
+function addTask() {
+  var name = document.getElementById('taskName').value.trim();
+  var timeVal = parseFloat(document.getElementById('taskTime').value);
+  var unit = document.getElementById('taskUnit').value;
+  var q = document.getElementById('taskQ').value;
+  var err = document.getElementById('formError');
+
+  if (!name) { showError('Please enter a task description.'); return; }
+  if (!timeVal || timeVal <= 0) { showError('Please enter a valid time.'); return; }
+  if (!q) { showError('Please select a priority quadrant.'); return; }
+
+  var hours = unit === 'mins' ? timeVal / 60 : timeVal;
+  var tasks = getTasks(currentDay);
+  tasks.push({ name: name, hours: hours, q: q });
+  saveTasks(currentDay, tasks);
+
+  document.getElementById('taskName').value = '';
+  document.getElementById('taskTime').value = '';
+  document.getElementById('taskQ').value = '';
+  err.style.display = 'none';
+
+  renderTabs();
+  renderDay(currentDay);
+  updateSummary();
+}
+
+function deleteTask(d, i) {
+  var tasks = getTasks(d);
+  tasks.splice(i, 1);
+  saveTasks(d, tasks);
+  renderTabs();
+  renderDay(d);
+  updateSummary();
+}
+
+function showError(msg) {
+  var err = document.getElementById('formError');
+  err.textContent = msg;
+  err.style.display = 'block';
+}
+
+function updateSummary() {
+  var totals = { Q1: 0, Q2: 0, Q3: 0, Q4: 0 };
+  for (var d = 0; d < 5; d++) {
+    getTasks(d).forEach(function(t) { totals[t.q] = (totals[t.q] || 0) + t.hours; });
+  }
+  var total = totals.Q1 + totals.Q2 + totals.Q3 + totals.Q4;
+  var maxH = Math.max(totals.Q1, totals.Q2, totals.Q3, totals.Q4, 0.01);
+
+  ['Q1','Q2','Q3','Q4'].forEach(function(q) {
+    var h = totals[q];
+    var pct = total > 0 ? Math.round((h / total) * 100) : 0;
+    var barPct = Math.round((h / maxH) * 100);
+    var qn = q.toLowerCase();
+    document.getElementById(qn + '-hours').textContent = h.toFixed(1);
+    document.getElementById(qn + '-pct').textContent = pct + '% of logged time';
+    document.getElementById(qn + '-bar').style.width = pct + '%';
+    document.getElementById('chart-' + qn).style.width = barPct + '%';
+    document.getElementById('chart-' + qn + '-val').textContent = h.toFixed(1) + 'h';
+  });
+}
+
+function saveReflection() {
+  var text = document.getElementById('reflectionText').value.trim();
+  saveReflectionData(currentDay, text);
+  var note = document.getElementById('savedNote');
+  note.style.display = 'block';
+  setTimeout(function() { note.style.display = 'none'; }, 2500);
+}
+
+function changeWeek(dir) {
+  currentWeekOffset += dir;
+  currentDay = 0;
+  init();
+}
+
+function showResetModal() { document.getElementById('resetModal').classList.add('show'); }
+function hideResetModal() { document.getElementById('resetModal').classList.remove('show'); }
+
+function resetWeek() {
+  for (var d = 0; d < 5; d++) {
+    localStorage.removeItem(getDayKey(d));
+    localStorage.removeItem(getReflectionKey(d));
+  }
+  hideResetModal();
+  currentDay = 0;
+  renderTabs();
+  renderDay(0);
+  updateSummary();
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+document.getElementById('reflectionText').addEventListener('blur', saveReflection);
+document.getElementById('taskName').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') addTask();
+});
+
+init();
+</script>
+</body>
+</html>

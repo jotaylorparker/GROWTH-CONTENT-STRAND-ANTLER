@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time Tracker Guide | Strand</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue: #1c374b; --red: #db0032; --warm: #dad2ca; --charcoal: #414141;
+    --muted: #7a7069; --border: #e2dbd4; --off-white: #f8f6f3; --light-warm: #f0ece8;
+  }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    color: var(--charcoal);
+    background: white;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 0;
+    background: white;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--blue);
+    padding: 20px 32px 18px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .header-left h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    margin-bottom: 3px;
+  }
+
+  .header-left p {
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .header-right {
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    text-align: right;
+    line-height: 1.8;
+  }
+
+  /* INTRO */
+  .intro {
+    background: var(--light-warm);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+  }
+
+  .intro p {
+    font-size: 12.5px;
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1.65;
+    max-width: 600px;
+  }
+
+  .intro strong { font-weight: 500; }
+
+  /* BODY */
+  .body { padding: 24px 32px; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--blue);
+    letter-spacing: 0.01em;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* STEPS */
+  .steps { list-style: none; }
+
+  .step {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    width: 22px;
+    height: 22px;
+    background: var(--blue);
+    color: white;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .step-body { flex: 1; }
+
+  .step-body strong {
+    display: block;
+    font-weight: 500;
+    font-size: 12.5px;
+    color: var(--charcoal);
+    margin-bottom: 2px;
+  }
+
+  .step-body p {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* MATRIX */
+  .matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+  .q-cell { border-radius: 3px; padding: 10px 12px; }
+
+  .q-cell .q-label {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+
+  .q-cell .q-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .q-cell .q-desc {
+    font-size: 11px;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .q-cell .q-eg {
+    font-size: 10.5px;
+    font-weight: 300;
+    font-style: italic;
+    margin-top: 4px;
+    line-height: 1.45;
+  }
+
+  .q1-cell { background: #fde8ee; }
+  .q1-cell .q-label { color: #db0032; }
+  .q1-cell .q-name, .q1-cell .q-desc { color: #5c1020; }
+  .q1-cell .q-eg { color: #8a3040; }
+
+  .q2-cell { background: #dde8ef; }
+  .q2-cell .q-label { color: #1c374b; }
+  .q2-cell .q-name, .q2-cell .q-desc { color: #0f2230; }
+  .q2-cell .q-eg { color: #2a5068; }
+
+  .q3-cell { background: #f5efe8; }
+  .q3-cell .q-label { color: #8a6840; }
+  .q3-cell .q-name, .q3-cell .q-desc { color: #4a3520; }
+  .q3-cell .q-eg { color: #6a5030; }
+
+  .q4-cell { background: #eceae7; }
+  .q4-cell .q-label { color: #7a7069; }
+  .q4-cell .q-name, .q4-cell .q-desc { color: #4a4845; }
+  .q4-cell .q-eg { color: #6a6865; }
+
+  /* TIPS */
+  .tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .tip-item {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    background: var(--off-white);
+    border-radius: 3px;
+    padding: 9px 11px;
+  }
+
+  .tip-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .tip-item p {
+    font-size: 11.5px;
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1.5;
+  }
+
+  .tip-item strong { font-weight: 500; }
+
+  /* REFLECTION */
+  .reflection-box {
+    background: var(--light-warm);
+    border-left: 3px solid var(--red);
+    border-radius: 0 3px 3px 0;
+    padding: 12px 16px;
+    margin-top: 20px;
+  }
+
+  .reflection-box .rb-title {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+
+  .reflection-box p {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1.6;
+  }
+
+  .prompts {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .prompt-item {
+    background: white;
+    border-radius: 3px;
+    padding: 8px 10px;
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* FOOTER */
+  .footer {
+    background: var(--blue);
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+  }
+
+  .footer-left {
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .footer-right {
+    font-size: 10px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.04em;
+  }
+
+  /* PRINT */
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page { width: 100%; margin: 0; }
+    .no-print { display: none; }
+  }
+
+  /* SCREEN ONLY */
+  @media screen {
+    body { background: #e8e6e2; padding: 32px; }
+    .page { box-shadow: 0 4px 24px rgba(0,0,0,0.12); }
+    .print-btn {
+      display: block;
+      text-align: center;
+      margin: 0 auto 20px;
+      max-width: 210mm;
+      font-family: 'Jost', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 24px;
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">&#9112; Print or save as PDF</button>
+
+<div class="page">
+
+  <div class="header">
+    <div class="header-left">
+      <h1>Your Weekly Time Tracker</h1>
+      <p>How to get started &mdash; Learning &amp; Development</p>
+    </div>
+    <div class="header-right">
+      Strand<br>
+      Going Places Since 1927
+    </div>
+  </div>
+
+  <div class="intro">
+    <p>This tracker is your companion for the week following the <strong>Time Management &amp; Prioritisation</strong> module. Use it to build honest self-awareness of where you're spending your time — understanding that will allow you to make more intentional choices about how you work.</p>
+  </div>
+
+  <div class="body">
+
+    <div class="two-col">
+
+      <!-- STEPS -->
+      <div>
+        <div class="section-title">How to use it</div>
+        <ul class="steps">
+          <li class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <strong>Open the tracker link</strong>
+              <p>Open the link shared with you in your browser. It works on any device — no login needed.</p>
+            </div>
+          </li>
+          <li class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <strong>Log tasks as you go</strong>
+              <p>After completing a task, add it to the tracker — give it a name, the time it took, and assign it to a priority quadrant (Quadrant 1–Quadrant 4).</p>
+            </div>
+          </li>
+          <li class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <strong>Work across the full week</strong>
+              <p>Use the Monday–Friday tabs to log each day separately. Try to log tasks on the same day — it's easier than trying to recall at the end of the week.</p>
+            </div>
+          </li>
+          <li class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <strong>Review your quadrant breakdown</strong>
+              <p>The summary at the top updates in real time. At the end of each day and the end of the week, look at how your time is distributed across Quadrant 1–Quadrant 4.</p>
+            </div>
+          </li>
+          <li class="step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <strong>Complete the daily reflection</strong>
+              <p>Each day has a short reflection prompt. Take 2–3 minutes at the end of the day to answer it honestly — this is where the real insight comes from.</p>
+            </div>
+          </li>
+          <li class="step">
+            <div class="step-num">6</div>
+            <div class="step-body">
+              <strong>Print or save your week</strong>
+              <p>At the end of the week, use the Print / Save PDF button to keep a record or share with your manager.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- MATRIX -->
+      <div>
+        <div class="section-title">Priority quadrant reminder</div>
+        <div class="matrix">
+          <div class="q-cell q1-cell">
+            <div class="q-label">Quadrant 1</div>
+            <div class="q-name">Do now</div>
+            <div class="q-desc">Urgent and important</div>
+            <div class="q-eg">e.g. Report due today, live issue, urgent stakeholder request</div>
+          </div>
+          <div class="q-cell q2-cell">
+            <div class="q-label">Quadrant 2</div>
+            <div class="q-name">Schedule it</div>
+            <div class="q-desc">Important, not urgent</div>
+            <div class="q-eg">e.g. Project planning, development work, relationship building</div>
+          </div>
+          <div class="q-cell q3-cell">
+            <div class="q-label">Quadrant 3</div>
+            <div class="q-name">Delegate or delay</div>
+            <div class="q-desc">Urgent, not important to you</div>
+            <div class="q-eg">e.g. Meetings without clear purpose, non-critical admin</div>
+          </div>
+          <div class="q-cell q4-cell">
+            <div class="q-label">Quadrant 4</div>
+            <div class="q-name">Eliminate</div>
+            <div class="q-desc">Neither urgent nor important</div>
+            <div class="q-eg">e.g. Irrelevant email chains, unnecessary browsing</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TIPS -->
+    <div class="section-title">Tips for getting the most out of it</div>
+    <div class="tips-grid">
+      <div class="tip-item">
+        <div class="tip-dot"></div>
+        <p><strong>Log in the moment</strong> — it only takes 30 seconds and is far more accurate than trying to recall later.</p>
+      </div>
+      <div class="tip-item">
+        <div class="tip-dot"></div>
+        <p><strong>Be honest with your quadrants</strong> — if you spent an hour on something that shouldn't have taken that long, log it as it was, not as you'd like it to be.</p>
+      </div>
+      <div class="tip-item">
+        <div class="tip-dot"></div>
+        <p><strong>Include meetings and calls</strong> — these count as tasks too. Log them with the time they actually took, not how long they were booked for.</p>
+      </div>
+      <div class="tip-item">
+        <div class="tip-dot"></div>
+        <p><strong>Your data stays private</strong> — everything is saved on your own device. No one else can see it unless you choose to share it.</p>
+      </div>
+    </div>
+
+    <!-- REFLECTION -->
+    <div class="reflection-box">
+      <div class="rb-title">End of day reflection</div>
+      <p>The tracker includes a different reflection prompt for each day of the week. Here are some of the questions you'll be asked — think about them honestly as you review your log.</p>
+      <div class="prompts">
+        <div class="prompt-item">"How balanced was your day across the quadrants? Were you mostly reactive or proactive?"</div>
+        <div class="prompt-item">"What took longer than expected — and was there a time trap at play?"</div>
+        <div class="prompt-item">"What one thing could you do differently tomorrow to protect more Quadrant 2 time?"</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer-left">Strand &nbsp;&mdash;&nbsp; Learning &amp; Development</div>
+    <div class="footer-right">Complete the Time Management module before using this tracker</div>
+  </div>
+
+</div>
+
+</body>
+</html>
